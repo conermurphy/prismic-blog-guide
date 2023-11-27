@@ -1,5 +1,4 @@
 import { RichComponents } from '@/slices/RichText';
-import { FilledContentRelationshipField } from '@prismicio/client';
 import { PrismicNextImage } from '@prismicio/next';
 import { PrismicLink, PrismicRichText } from '@prismicio/react';
 import { BlogPostDocument } from '../../prismicio-types';

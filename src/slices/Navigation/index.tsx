@@ -1,11 +1,4 @@
-import {
-  Content,
-  FilledContentRelationshipField,
-  RTEmbedNode,
-  RichTextField,
-  TitleField,
-} from '@prismicio/client';
-import { createClient } from '@/prismicio';
+import { Content, FilledContentRelationshipField } from '@prismicio/client';
 import {
   PrismicLink,
   PrismicRichText,
