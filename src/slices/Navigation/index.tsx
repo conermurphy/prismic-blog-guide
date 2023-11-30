@@ -1,10 +1,10 @@
-import { Content, FilledContentRelationshipField } from '@prismicio/client';
+import { RichText } from '@/components/RichText';
+import { Content, isFilled } from '@prismicio/client';
 import {
   PrismicLink,
   PrismicRichText,
   SliceComponentProps,
 } from '@prismicio/react';
-import { RichComponents } from '../RichText';
 
 /**
  * Props for `Navigation`.
@@ -16,25 +16,26 @@ export type NavigationProps = SliceComponentProps<Content.NavigationSlice>;
  */
 const Navigation = ({ slice }: NavigationProps): JSX.Element => {
   return (
-    <section
+    <nav
       data-slice-type={slice.slice_type}
       data-slice-variation={slice.variation}
       className="font-bold text-xl self-center"
     >
-      {slice.items.map((item, i) => {
-        const link = item.page as FilledContentRelationshipField;
-
-        return (
-          <PrismicLink
-            href={link.url || ''}
-            key={link.id}
-            className="hover:opacity-75 duration-300 ease-in-out transition-all"
-          >
-            <PrismicRichText field={item.label} components={RichComponents} />
-          </PrismicLink>
-        );
-      })}
-    </section>
+      <ul>
+        {slice.items.map((item) =>
+          isFilled.contentRelationship(item.page) ? (
+            <li key={item.page.id}>
+              <PrismicLink
+                field={item.page}
+                className="hover:opacity-75 duration-300 ease-in-out transition-all"
+              >
+                <RichText field={item.label} />
+              </PrismicLink>
+            </li>
+          ) : null
+        )}
+      </ul>
+    </nav>
   );
 };
 

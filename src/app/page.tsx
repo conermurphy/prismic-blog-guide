@@ -1,13 +1,13 @@
 import { Metadata } from 'next';
 
-import { PrismicRichText, SliceZone } from '@prismicio/react';
+import { SliceZone } from '@prismicio/react';
 import * as prismic from '@prismicio/client';
 
 import { createClient } from '@/prismicio';
 import { components } from '@/slices';
 import { PostCard } from '@/components/PostCard';
 import { PrismicNextImage } from '@prismicio/next';
-import { RichComponents } from '@/slices/RichText';
+import { RichText } from '@/components/RichText';
 
 /**
  * This component renders your homepage.
@@ -63,23 +63,16 @@ export default async function Index() {
       {/* Display out Hero "static data" we added to our "homepage" */}
       {hero[0] ? (
         <section className="flex flex-col gap-4 max-w-3xl">
-          {hero[0].image ? (
+          {prismic.isFilled.image(hero[0].image) ? (
             <PrismicNextImage
               field={hero[0].image}
               sizes="100vw"
-              style={{ objectFit: 'cover' }}
-              className="w-full max-w-[100px] max-h-full rounded-md"
+              className="w-full max-w-[100px] max-h-full rounded-md object-cover"
             />
           ) : null}
           <div className="flex flex-col gap-2">
-            <PrismicRichText
-              field={hero[0].title}
-              components={RichComponents}
-            />
-            <PrismicRichText
-              field={hero[0].description}
-              components={RichComponents}
-            />
+            <RichText field={hero[0].title} />
+            <RichText field={hero[0].description} />
           </div>
         </section>
       ) : null}
@@ -87,7 +80,7 @@ export default async function Index() {
       {/* Map over each of the blog posts created and display a `PostCard` for it */}
       <section className="grid grid-cols-1 gap-8 max-w-3xl w-full">
         {posts.map((post) => (
-          <PostCard post={post} />
+          <PostCard key={post.id} post={post} />
         ))}
       </section>
 

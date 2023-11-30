@@ -1,27 +1,26 @@
-import { RichComponents } from '@/slices/RichText';
 import { PrismicNextImage } from '@prismicio/next';
-import { PrismicLink, PrismicRichText } from '@prismicio/react';
-import { BlogPostDocument } from '../../prismicio-types';
+import { PrismicLink } from '@prismicio/react';
+import { RichText } from './RichText';
+import { Content, isFilled } from '@prismicio/client';
 
-const PostCard = ({
+export const PostCard = ({
   post,
 }: {
-  post: BlogPostDocument<string>;
+  post: Content.BlogPostDocument;
 }): JSX.Element => {
   const { data } = post;
 
   return (
     <PrismicLink
-      href={`/blog/${post.uid}`}
       key={post.id}
+      document={post}
       className="grid grid-cols-2 gap-10"
     >
-      {data.featured_image ? (
+      {isFilled.image(data.featured_image) ? (
         <PrismicNextImage
           field={data.featured_image}
           sizes="100vw"
-          style={{ objectFit: 'cover' }}
-          className="w-full max-w-sm max-h-60 rounded-xl"
+          className="w-full max-w-sm max-h-60 rounded-xl object-cover"
         />
       ) : null}
       <div className="flex flex-col gap-3">
@@ -30,14 +29,12 @@ const PostCard = ({
             {new Date(data?.publication_date || '').toLocaleDateString()}
           </p>
           <div className="hover:opacity-75 duration-300 ease-in-out transition-all">
-            <h2 className="font-bold text-2xl">{data.title[0]?.text}</h2>
+            <RichText field={data.title} />
           </div>
         </div>
-        <PrismicRichText field={data.description} components={RichComponents} />
+        <RichText field={data.description} />
       </div>
       <div className="border-b border-solid border-gray-200 w-full col-span-2" />
     </PrismicLink>
   );
 };
-
-export { PostCard };

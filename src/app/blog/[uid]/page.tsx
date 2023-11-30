@@ -1,15 +1,15 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-import { PrismicRichText, SliceZone } from '@prismicio/react';
+import { SliceZone } from '@prismicio/react';
 import * as prismic from '@prismicio/client';
 
 import { createClient } from '@/prismicio';
 import { components } from '@/slices';
 import { NavigationSlice, RichTextSlice } from '../../../../prismicio-types';
 import { PrismicNextImage } from '@prismicio/next';
-import { RichComponents } from '@/slices/RichText';
 import { PostCard } from '@/components/PostCard';
+import { RichText } from '@/components/RichText';
 
 type Params = { uid: string };
 
@@ -95,9 +95,7 @@ export default async function Page({ params }: { params: Params }) {
   return (
     <div className="flex flex-col gap-12 w-full max-w-3xl">
       {/* Display the navigation slice */}
-      {navigation ? (
-        <SliceZone slices={navigation} components={components} />
-      ) : null}
+      <SliceZone slices={navigation} components={components} />
 
       {/* Display the "hero" section of the blog post */}
       <section className="flex flex-col gap-12">
@@ -107,19 +105,18 @@ export default async function Page({ params }: { params: Params }) {
               {new Date(publication_date || '').toLocaleDateString()}
             </p>
             <div className="text-center">
-              <PrismicRichText field={title} components={RichComponents} />
+              <RichText field={title} />
             </div>
           </div>
           <div className="text-center">
-            <PrismicRichText field={description} components={RichComponents} />
+            <RichText field={description} />
           </div>
         </div>
-        {featured_image ? (
+        {prismic.isFilled.image(featured_image) ? (
           <PrismicNextImage
             field={featured_image}
             sizes="100vw"
-            style={{ objectFit: 'cover' }}
-            className="w-full max-w-3xl max-h-96 rounded-xl"
+            className="w-full max-w-3xl max-h-96 rounded-xl object-cover"
           />
         ) : null}
       </section>
@@ -131,14 +128,12 @@ export default async function Page({ params }: { params: Params }) {
       <h2 className="font-bold text-3xl">Recommended Posts</h2>
       <section className="grid grid-cols-1 gap-8 max-w-3xl w-full">
         {posts.map((post) => (
-          <PostCard post={post} />
+          <PostCard key={post.id} post={post} />
         ))}
       </section>
 
       {/* Display the navigation slice */}
-      {navigation ? (
-        <SliceZone slices={navigation} components={components} />
-      ) : null}
+      <SliceZone slices={navigation} components={components} />
     </div>
   );
 }
